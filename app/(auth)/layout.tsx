@@ -1,0 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Authentication - GateKeeper",
+  description: "Sign in to your GateKeeper account",
+};
+
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 via-white to-slate-100 p-4">
+      <div className="w-full max-w-md">{children}</div>
+    </div>
+  );
+}

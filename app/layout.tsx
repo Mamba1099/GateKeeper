@@ -1,36 +1,26 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { getSession } from "@/lib/auth/auth.config";
+import { Providers } from "@/app/providers";
+import { Toaster } from "sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "GateKeeper",
-  description: "GateKeeper system branding",
-  icons: {
-    icon: "/image.png",
-  },
-};
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const session = await getSession();
+
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body>
+        <TooltipProvider>
+          <Providers session={session}>
+            {children}
+            <Toaster position="top-right" richColors />
+          </Providers>
+        </TooltipProvider>
+      </body>
     </html>
   );
 }
