@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  EMPLOYEE
+  HR
+  ADMIN
+}
+
+enum CheckInStatus {
+  CHECKED_IN
+  CHECKED_OUT
+  LATE
+  ABSENT
+}
+
+enum AttendanceRating {
+  POOR 
+  FAIR
+  GOOD
+  EXCELLENT
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  password_hash     String?
+  full_name         String
+  role              Role      @default(EMPLOYEE)
+  department_id     String
+  position          String?
+  is_active         Boolean   @default(true)
+  last_login_at     DateTime?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  department        Department @relation(fields: [department_id], references: [id])
+  check_ins         CheckIn[]
+  employeeMetrics   EmployeeMetrics[]
+  attendanceSummaries AttendanceSummary[]
+  dailyArrivalDatas DailyArrivalData[]
+  sessions          Session[]
+  loginAttempts     LoginAttempt[]
+  auditLogs         AuditLog[]
+  accounts          Account[]
+  nextauth_sessions NextAuthSession[]
+
+  @@index([email])
+  @@index([department_id])
+  @@index([role])
+  @@map("users")
+}
+
+model Department {
+  id                String    @id @default(cuid())
+  name              String    @unique
+  code              String    @unique
+  description       String?
+  standard_check_in String    @default("08:00")
+  standard_check_out String   @default("15:00")
+  grace_minutes     Int       @default(15)
+  late_threshold    Int       @default(30)
+  good_attendance_threshold Int @default(75)
+  is_active         Boolean   @default(true)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  users             User[]
+  check_in_settings CheckInSetting?
+
+  @@map("departments")
+}
+
+model CheckInSetting {
+  id                    String    @id @default(cuid())
+  department_id         String    @unique
+  standard_time         String    @default("08:00")
+  grace_minutes         Int       @default(15)
+  late_threshold_minutes Int      @default(30)
+  created_at            DateTime  @default(now())
+  updated_at            DateTime  @updatedAt
+
+  department            Department @relation(fields: [department_id], references: [id])
+
+  @@map("check_in_settings")
+}
+
+model CheckIn {
+  id                String        @id @default(cuid())
+  user_id           String
+  check_in_time     DateTime      @default(now())
+  check_out_time    DateTime?
+  status            CheckInStatus @default(CHECKED_IN)
+  is_late           Boolean       @default(false)
+  late_minutes      Int?
+  is_early          Boolean       @default(false)
+  early_minutes     Int?
+  is_early_departure Boolean      @default(false)
+  early_departure_minutes Int?
+  hours_worked      Float?
+  date              DateTime      @default(now())
+  created_at        DateTime      @default(now())
+
+  user              User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, date])
+  @@index([user_id, date])
+  @@index([date])
+  @@index([status])
+  @@index([is_late])
+  @@map("check_ins")
+}
+
+model EmployeeMetrics {
+  id                    String    @id @default(cuid())
+  user_id               String    @unique
+  total_check_ins       Int       @default(0)
+  on_time_check_ins     Int       @default(0)
+  late_check_ins        Int       @default(0)
+  early_check_ins       Int       @default(0)
+  early_departures      Int       @default(0)
+  total_hours_worked    Float     @default(0)
+  current_streak        Int       @default(0)
+  best_streak           Int       @default(0)
+  attendance_percentage Float     @default(0)
+  attendance_rating     AttendanceRating @default(POOR)
+  average_arrival_minutes Int? 
+  average_departure_minutes Int? 
+  created_at            DateTime  @default(now())
+  updated_at            DateTime  @updatedAt
+
+  user                  User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("employee_metrics")
+}
+
+model AttendanceSummary {
+  id                      String    @id @default(cuid())
+  user_id                 String
+  month                   Int
+  year                    Int
+  total_days              Int       @default(0)
+  present_days            Int       @default(0)
+  absent_days             Int       @default(0)
+  late_days               Int       @default(0)
+  on_time_days            Int       @default(0)
+  early_days              Int       @default(0)
+  early_departure_days    Int       @default(0)
+  total_hours_worked      Float     @default(0)
+  average_arrival_time    String? 
+  average_departure_time  String? 
+  attendance_percentage   Float     @default(0)
+  punctuality_percentage  Float     @default(0)
+  attendance_rating       AttendanceRating @default(POOR)
+  created_at              DateTime  @default(now())
+  updated_at              DateTime  @updatedAt
+
+  user                    User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, month, year])
+  @@index([user_id, year, month])
+  @@map("attendance_summaries")
+}
+
+model DailyArrivalData {
+  id                String    @id @default(cuid())
+  user_id           String
+  date              DateTime
+  arrival_minutes   Int       
+  departure_minutes Int   
+  is_late           Boolean
+  is_early          Boolean
+  is_early_departure Boolean
+  created_at        DateTime  @default(now())
+
+  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, date])
+  @@index([user_id, date])
+  @@map("daily_arrival_data")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model NextAuthSession {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("nextauth_sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Session {
+  id                String    @id @default(cuid())
+  session_token     String    @unique
+  user_id           String
+  device_id         String?
+  ip_address        String?
+  expires_at        DateTime
+  last_activity_at  DateTime  @default(now())
+  is_revoked        Boolean   @default(false)
+  created_at        DateTime  @default(now())
+
+  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([expires_at])
+  @@map("sessions")
+}
+
+model LoginAttempt {
+  id                String    @id @default(cuid())
+  email             String
+  user_id           String?
+  success           Boolean
+  attempted_at      DateTime  @default(now())
+
+  user              User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@map("login_attempts")
+}
+
+model AuditLog {
+  id                String    @id @default(cuid())
+  user_id           String
+  action            String
+  details           Json?
+  created_at        DateTime  @default(now())
+
+  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([created_at])
+  @@map("audit_logs")
+}
