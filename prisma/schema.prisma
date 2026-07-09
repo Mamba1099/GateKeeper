@@ -45,11 +45,7 @@ model User {
   employeeMetrics   EmployeeMetrics[]
   attendanceSummaries AttendanceSummary[]
   dailyArrivalDatas DailyArrivalData[]
-  sessions          Session[]
   loginAttempts     LoginAttempt[]
-  auditLogs         AuditLog[]
-  accounts          Account[]
-  nextauth_sessions NextAuthSession[]
 
   @@index([email])
   @@index([department_id])
@@ -186,63 +182,6 @@ model DailyArrivalData {
   @@map("daily_arrival_data")
 }
 
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@map("accounts")
-}
-
-model NextAuthSession {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("nextauth_sessions")
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verification_tokens")
-}
-
-model Session {
-  id                String    @id @default(cuid())
-  session_token     String    @unique
-  user_id           String
-  device_id         String?
-  ip_address        String?
-  expires_at        DateTime
-  last_activity_at  DateTime  @default(now())
-  is_revoked        Boolean   @default(false)
-  created_at        DateTime  @default(now())
-
-  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@index([expires_at])
-  @@map("sessions")
-}
-
 model LoginAttempt {
   id                String    @id @default(cuid())
   email             String
@@ -254,18 +193,4 @@ model LoginAttempt {
 
   @@index([email])
   @@map("login_attempts")
-}
-
-model AuditLog {
-  id                String    @id @default(cuid())
-  user_id           String
-  action            String
-  details           Json?
-  created_at        DateTime  @default(now())
-
-  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@index([created_at])
-  @@map("audit_logs")
 }
