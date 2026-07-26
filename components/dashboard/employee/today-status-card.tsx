@@ -21,7 +21,7 @@ interface TodayStatusProps {
 export function TodayStatusCard({ status, isLoading }: TodayStatusProps) {
   if (isLoading) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
         <CardContent className="p-6">
           <div className="animate-pulse flex flex-col gap-4">
             <div className="h-6 bg-gray-200 rounded w-1/3" />
@@ -37,7 +37,7 @@ export function TodayStatusCard({ status, isLoading }: TodayStatusProps) {
   const isCheckedOut = !!status?.check_out_time;
 
   return (
-    <Card className="border-0 shadow-sm overflow-hidden">
+    <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl overflow-hidden">
       <div
         className={`h-1 ${isCheckedIn ? "bg-emerald-500" : "bg-gray-300"}`}
       />
@@ -50,8 +50,8 @@ export function TodayStatusCard({ status, isLoading }: TodayStatusProps) {
             variant={isCheckedIn ? "default" : "secondary"}
             className={
               isCheckedIn
-                ? "bg-emerald-100 text-emerald-700"
-                : "bg-gray-100 text-gray-600"
+                ? "bg-emerald-100/80 text-emerald-700 backdrop-blur-sm"
+                : "bg-gray-100/80 text-gray-600 backdrop-blur-sm"
             }
           >
             {isCheckedIn
@@ -130,7 +130,7 @@ export function TodayStatusCard({ status, isLoading }: TodayStatusProps) {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2 border-t border-gray-200/60">
           <p className="text-sm text-gray-500">
             {!isCheckedIn && "You haven't checked in today"}
             {isCheckedIn && !isCheckedOut && "Don't forget to check out"}

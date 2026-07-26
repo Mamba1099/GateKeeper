@@ -22,7 +22,10 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <Card key={i} className="border-0 shadow-sm">
+          <Card
+            key={i}
+            className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl"
+          >
             <CardContent className="p-6">
               <div className="animate-pulse flex flex-col gap-2">
                 <div className="h-4 bg-gray-200 rounded w-1/2" />
@@ -43,7 +46,7 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
       subtitle: `${stats?.present_days || 0}/${stats?.total_days || 22} days`,
       icon: Calendar,
       color: "text-blue-600",
-      bg: "bg-blue-50",
+      bg: "bg-blue-50/80",
     },
     {
       title: "On Time",
@@ -51,7 +54,7 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
       subtitle: `${(stats?.present_days || 0) - (stats?.late_days || 0)} on time days`,
       icon: CheckCircle,
       color: "text-emerald-600",
-      bg: "bg-emerald-50",
+      bg: "bg-emerald-50/80",
     },
     {
       title: "Current Streak",
@@ -59,7 +62,7 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
       subtitle: "consecutive days",
       icon: Clock,
       color: "text-purple-600",
-      bg: "bg-purple-50",
+      bg: "bg-purple-50/80",
     },
     {
       title: "Late Days",
@@ -67,7 +70,7 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
       subtitle: "this month",
       icon: AlertCircle,
       color: "text-red-600",
-      bg: "bg-red-50",
+      bg: "bg-red-50/80",
     },
   ];
 
@@ -76,13 +79,13 @@ export function StatsCards({ stats, isLoading }: StatsCardsProps) {
       {statCards.map((stat) => (
         <Card
           key={stat.title}
-          className="border-0 shadow-sm hover:shadow-md transition-shadow"
+          className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl transition-colors hover:bg-white/90"
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               {stat.title}
             </CardTitle>
-            <div className={`rounded-full p-2 ${stat.bg}`}>
+            <div className={`rounded-full p-2 ${stat.bg} backdrop-blur-sm`}>
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
             </div>
           </CardHeader>

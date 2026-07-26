@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Menu, User} from "lucide-react";
+import { Menu, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +33,14 @@ export function Header({ onMenuClick, title, subtitle }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-6 h-16 shrink-0">
+    <header
+      className="sticky top-0 z-30 flex items-center justify-between px-4 lg:px-6 h-16 shrink-0
+      bg-linear-to-r from-blue-50/80 via-white/90 to-purple-50/80
+      backdrop-blur-md
+      border-b border-gray-200/60
+      shadow-[0_1px_3px_rgba(0,0,0,0.02),0_4px_12px_rgba(0,0,0,0.03)]
+    "
+    >
       <div className="flex items-center gap-3 min-w-0">
         <Button
           variant="ghost"
@@ -56,7 +63,6 @@ export function Header({ onMenuClick, title, subtitle }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-1 sm:gap-2">
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-9 gap-2 px-2">

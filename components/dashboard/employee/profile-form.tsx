@@ -75,7 +75,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   }, [profile, profileForm]);
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold text-gray-900">
           Profile Settings
@@ -90,7 +90,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           onValueChange={setActiveTab}
           className="space-y-6"
         >
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-md grid-cols-2 bg-white/50 backdrop-blur-sm">
             <TabsTrigger value="profile" className="gap-2">
               <User className="h-4 w-4" />
               Profile
@@ -133,7 +133,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          className={`border-gray-200 focus:border-blue-500 ${
+                          className={`bg-white/60 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 rounded-lg ${
                             hasError
                               ? "border-red-500 focus-visible:ring-red-500"
                               : ""
@@ -156,7 +156,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                   <Input
                     value={profile.email}
                     disabled
-                    className="bg-gray-50"
+                    className="bg-gray-50/80 backdrop-blur-sm border-gray-200/60 rounded-lg"
                   />
                   <p className="text-xs text-gray-400">
                     Email cannot be changed
@@ -185,7 +185,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                           value={field.state.value}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          className={`border-gray-200 focus:border-blue-500 ${
+                          className={`bg-white/60 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 rounded-lg ${
                             hasError
                               ? "border-red-500 focus-visible:ring-red-500"
                               : ""
@@ -208,7 +208,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                   <Input
                     value={profile.department_name}
                     disabled
-                    className="bg-gray-50"
+                    className="bg-gray-50/80 backdrop-blur-sm border-gray-200/60 rounded-lg"
                   />
                 </div>
               </div>
@@ -218,7 +218,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                   <Button
                     type="submit"
                     disabled={!canSubmit || updateProfile.isPending}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-blue-600 hover:bg-blue-700 transition-colors"
                   >
                     {updateProfile.isPending ? (
                       <>
@@ -266,7 +266,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className={`border-gray-200 focus:border-blue-500 ${
+                        className={`bg-white/60 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 rounded-lg ${
                           hasError
                             ? "border-red-500 focus-visible:ring-red-500"
                             : ""
@@ -305,7 +305,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className={`border-gray-200 focus:border-blue-500 ${
+                        className={`bg-white/60 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 rounded-lg ${
                           hasError
                             ? "border-red-500 focus-visible:ring-red-500"
                             : ""
@@ -348,7 +348,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className={`border-gray-200 focus:border-blue-500 ${
+                        className={`bg-white/60 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 rounded-lg ${
                           hasError
                             ? "border-red-500 focus-visible:ring-red-500"
                             : ""
@@ -369,7 +369,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                   <Button
                     type="submit"
                     disabled={!canSubmit || changePassword.isPending}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-blue-600 hover:bg-blue-700 transition-colors"
                   >
                     {changePassword.isPending ? (
                       <>
