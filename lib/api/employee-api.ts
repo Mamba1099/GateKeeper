@@ -73,17 +73,18 @@ export const employeeApi = {
     return response.data;
   },
 
-    // Profile
   getProfile: async () => {
     const response = await apiClient.get("/api/employee/profile");
     return response.data;
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   updateProfile: async (data: any) => {
     const response = await apiClient.put("/api/employee/profile", data);
     return response.data;
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   changePassword: async (data: any) => {
     const response = await apiClient.post("/api/employee/change-password", data);
     return response.data;
