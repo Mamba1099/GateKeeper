@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Plus, Loader2 } from "lucide-react";
+import { Building2, Loader2 } from "lucide-react";
 import { useDepartments } from "@/hooks/queries/use-department-queries";
 import { useDeactivateDepartment } from "@/hooks/mutations/use-department";
 import { Department } from "@/lib/api/department-api";
@@ -85,44 +85,44 @@ export default function HRManageDepartments() {
         </div>
       </div>
 
-      {/* Stats Summary */}
+      {/* Stats Summary – glass cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <Card className="border-0 shadow-sm">
+        <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
           <CardContent className="p-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               Total
             </p>
-            <p className="text-xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-gray-900 mt-1">
               {departments.length}
             </p>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-sm">
+        <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
           <CardContent className="p-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               Active
             </p>
-            <p className="text-xl font-bold text-emerald-600">
+            <p className="text-2xl font-bold text-emerald-600 mt-1">
               {departments.filter((d) => d.is_active).length}
             </p>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-sm">
+        <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
           <CardContent className="p-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               Total Employees
             </p>
-            <p className="text-xl font-bold text-blue-600">
+            <p className="text-2xl font-bold text-blue-600 mt-1">
               {departments.reduce((acc, d) => acc + (d._count?.users || 0), 0)}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Department Table */}
-      <Card className="border-0 shadow-sm">
+      {/* Department Table – glass card */}
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl overflow-hidden">
         <CardContent className="p-0 sm:p-6">
-          <div className="rounded-lg border overflow-x-auto">
+          <div className="rounded-lg border border-gray-200/60 overflow-x-auto bg-white/40 backdrop-blur-sm">
             <Table>
               <TableHeader className="bg-gray-50/50">
                 <TableRow>
@@ -163,11 +163,11 @@ export default function HRManageDepartments() {
                   departments.map((dept) => (
                     <TableRow
                       key={dept.id}
-                      className="hover:bg-gray-50/50 transition-colors"
+                      className="hover:bg-white/60 transition-colors"
                     >
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-lg bg-linear-to-br from-blue-50 to-blue-100 flex items-center justify-center flex-shrink-0">
+                          <div className="h-9 w-9 rounded-lg bg-linear-to-br from-blue-100 to-blue-200 flex items-center justify-center shrink-0 border border-white/60">
                             <Building2 className="h-4 w-4 text-blue-600" />
                           </div>
                           <span className="font-medium text-gray-900">
@@ -178,7 +178,7 @@ export default function HRManageDepartments() {
                       <TableCell className="hidden sm:table-cell">
                         <Badge
                           variant="outline"
-                          className="font-mono text-xs border-gray-200 bg-gray-50"
+                          className="font-mono text-xs border-gray-200/60 bg-white/60 backdrop-blur-sm"
                         >
                           {dept.code}
                         </Badge>
@@ -215,9 +215,9 @@ export default function HRManageDepartments() {
                             variant={dept.is_active ? "default" : "secondary"}
                             className={`${
                               dept.is_active
-                                ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-50"
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-100"
-                            } border-0`}
+                                ? "bg-emerald-50/80 text-emerald-700 hover:bg-emerald-50"
+                                : "bg-gray-100/80 text-gray-600 hover:bg-gray-100"
+                            } border-0 backdrop-blur-sm`}
                           >
                             <span
                               className={`h-1.5 w-1.5 rounded-full mr-1.5 ${
@@ -232,7 +232,7 @@ export default function HRManageDepartments() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-7 px-2 text-red-500 hover:text-red-600 hover:bg-red-50"
+                              className="h-7 px-2 text-red-500 hover:text-red-600 hover:bg-red-50/80"
                               onClick={() =>
                                 handleDeactivate(dept.id, dept.name)
                               }
@@ -253,7 +253,12 @@ export default function HRManageDepartments() {
               Showing {departments.length} departments
             </p>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => refetch()}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-white/60 backdrop-blur-sm border-gray-200/60"
+                onClick={() => refetch()}
+              >
                 Refresh
               </Button>
             </div>

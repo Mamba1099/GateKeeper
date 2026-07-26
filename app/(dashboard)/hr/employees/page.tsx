@@ -142,7 +142,7 @@ export default function HRManageEmployees() {
           open={createDialogOpen}
           onOpenChange={setCreateDialogOpen}
           trigger={
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-colors">
+            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white transition-colors">
               <Plus className="h-4 w-4 mr-2" />
               Add Employee
             </Button>
@@ -152,42 +152,42 @@ export default function HRManageEmployees() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Card className="border-0 shadow-sm">
+        <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
           <CardContent className="p-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               Total
             </p>
-            <p className="text-xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-gray-900 mt-1">
               {employees.length}
             </p>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-sm">
+        <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
           <CardContent className="p-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               Active
             </p>
-            <p className="text-xl font-bold text-emerald-600">
+            <p className="text-2xl font-bold text-emerald-600 mt-1">
               {employees.filter((e) => e.is_active).length}
             </p>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-sm">
+        <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
           <CardContent className="p-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               Inactive
             </p>
-            <p className="text-xl font-bold text-red-600">
+            <p className="text-2xl font-bold text-red-600 mt-1">
               {employees.filter((e) => !e.is_active).length}
             </p>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-sm">
+        <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
           <CardContent className="p-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
               Departments
             </p>
-            <p className="text-xl font-bold text-purple-600">
+            <p className="text-2xl font-bold text-purple-600 mt-1">
               {new Set(employees.map((e) => e.department_id)).size}
             </p>
           </CardContent>
@@ -195,8 +195,8 @@ export default function HRManageEmployees() {
       </div>
 
       {/* Employee Table */}
-      <Card className="border-0 shadow-sm">
-        <CardHeader className="pb-3">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl overflow-hidden">
+        <CardHeader className="pb-3 border-b border-gray-200/60">
           <div className="flex flex-col sm:flex-row gap-3 justify-between">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -204,15 +204,23 @@ export default function HRManageEmployees() {
                 placeholder="Search by name, email, or department..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-gray-200 focus:border-blue-400"
+                className="pl-10 bg-white/50 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 focus:ring-1 focus:ring-blue-200 rounded-lg"
               />
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="text-gray-600">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-white/60 backdrop-blur-sm border-gray-200/60 text-gray-600 hover:bg-white/80"
+              >
                 <Filter className="h-4 w-4 mr-2" />
                 Filter
               </Button>
-              <Button variant="outline" size="sm" className="text-gray-600">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-white/60 backdrop-blur-sm border-gray-200/60 text-gray-600 hover:bg-white/80"
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
@@ -220,7 +228,7 @@ export default function HRManageEmployees() {
           </div>
         </CardHeader>
         <CardContent className="p-0 sm:p-6 pt-0">
-          <div className="rounded-lg border overflow-x-auto">
+          <div className="rounded-lg border border-gray-200/60 overflow-x-auto bg-white/40 backdrop-blur-sm">
             <Table>
               <TableHeader className="bg-gray-50/50">
                 <TableRow>
@@ -262,12 +270,12 @@ export default function HRManageEmployees() {
                   employees.map((employee) => (
                     <TableRow
                       key={employee.id}
-                      className="hover:bg-gray-50/50 transition-colors"
+                      className="hover:bg-white/60 transition-colors"
                     >
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-full bg-linear-to-br from-blue-50 to-blue-100 flex items-center justify-center shrink-0">
-                            <span className="text-sm font-medium text-blue-600">
+                          <div className="h-9 w-9 rounded-full bg-linear-to-br from-blue-100 to-blue-200 flex items-center justify-center shrink-0 border border-white/60">
+                            <span className="text-sm font-medium text-blue-700">
                               {employee.full_name.charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -300,9 +308,9 @@ export default function HRManageEmployees() {
                           variant={employee.is_active ? "default" : "secondary"}
                           className={`${
                             employee.is_active
-                              ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-50"
-                              : "bg-gray-100 text-gray-600 hover:bg-gray-100"
-                          } border-0`}
+                              ? "bg-emerald-50/80 text-emerald-700 hover:bg-emerald-50"
+                              : "bg-gray-100/80 text-gray-600 hover:bg-gray-100"
+                          } border-0 backdrop-blur-sm`}
                         >
                           <span
                             className={`h-1.5 w-1.5 rounded-full mr-1.5 ${
@@ -320,29 +328,29 @@ export default function HRManageEmployees() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-8 w-8 p-0"
+                              className="h-8 w-8 p-0 hover:bg-white/60"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="end"
-                            className="w-48 bg-white border border-gray-200 shadow-lg rounded-md p-1"
+                            className="w-48 bg-white/90 backdrop-blur-md border border-gray-200/60 rounded-xl p-1"
                           >
-                            <DropdownMenuItem className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+                            <DropdownMenuItem className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100/80 rounded-lg cursor-pointer">
                               <Eye className="h-4 w-4" />
                               View Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleEdit(employee)}
-                              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer"
+                              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100/80 rounded-lg cursor-pointer"
                             >
                               <Pencil className="h-4 w-4" />
                               Edit Details
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleResetPasswordClick(employee)}
-                              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer"
+                              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100/80 rounded-lg cursor-pointer"
                             >
                               <Key className="h-4 w-4" />
                               Reset Password
@@ -350,7 +358,7 @@ export default function HRManageEmployees() {
                             {employee.is_active ? (
                               <DropdownMenuItem
                                 onClick={() => handleDeactivate(employee.id)}
-                                className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md cursor-pointer"
+                                className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50/80 rounded-lg cursor-pointer"
                               >
                                 <Trash2 className="h-4 w-4" />
                                 Deactivate
@@ -358,7 +366,7 @@ export default function HRManageEmployees() {
                             ) : (
                               <DropdownMenuItem
                                 onClick={() => handleActivate(employee.id)}
-                                className="flex items-center gap-2 px-3 py-2 text-sm text-emerald-600 hover:bg-emerald-50 rounded-md cursor-pointer"
+                                className="flex items-center gap-2 px-3 py-2 text-sm text-emerald-600 hover:bg-emerald-50/80 rounded-lg cursor-pointer"
                               >
                                 <CheckCircle className="h-4 w-4" />
                                 Activate
@@ -377,7 +385,12 @@ export default function HRManageEmployees() {
             <p className="text-sm text-gray-500">
               Showing {employees.length} employees
             </p>
-            <Button variant="outline" size="sm" onClick={() => refetch()}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-white/60 backdrop-blur-sm border-gray-200/60"
+              onClick={() => refetch()}
+            >
               Refresh
             </Button>
           </div>
