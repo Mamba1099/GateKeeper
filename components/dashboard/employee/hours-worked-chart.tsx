@@ -34,7 +34,7 @@ interface HoursWorkedChartProps {
 export function HoursWorkedChart({ data, isLoading }: HoursWorkedChartProps) {
   if (isLoading) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
         <CardContent className="p-6">
           <div className="animate-pulse h-62.5 bg-gray-200 rounded-lg" />
         </CardContent>
@@ -44,7 +44,7 @@ export function HoursWorkedChart({ data, isLoading }: HoursWorkedChartProps) {
 
   if (!data || data.length === 0) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-gray-900">
             Hours Worked
@@ -64,7 +64,7 @@ export function HoursWorkedChart({ data, isLoading }: HoursWorkedChartProps) {
   const total = data.reduce((sum, d) => sum + d.hours, 0);
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
       <CardHeader>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -74,11 +74,17 @@ export function HoursWorkedChart({ data, isLoading }: HoursWorkedChartProps) {
             <CardDescription>Last 30 days</CardDescription>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Badge variant="outline" className="flex items-center gap-1.5">
+            <Badge
+              variant="outline"
+              className="flex items-center gap-1.5 bg-white/60 backdrop-blur-sm border-gray-200/60"
+            >
               <Clock className="h-3 w-3" />
               Total: {total.toFixed(1)}h
             </Badge>
-            <Badge variant="outline" className="flex items-center gap-1.5">
+            <Badge
+              variant="outline"
+              className="flex items-center gap-1.5 bg-white/60 backdrop-blur-sm border-gray-200/60"
+            >
               <TrendingUp className="h-3 w-3" />
               Avg: {avg.toFixed(1)}h/day
             </Badge>
@@ -92,27 +98,19 @@ export function HoursWorkedChart({ data, isLoading }: HoursWorkedChartProps) {
               data={data}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                className="stroke-gray-200"
-              />
-              <XAxis
-                dataKey="day"
-                className="text-xs text-gray-500"
-                tick={{ fill: "#6B7280" }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
+              <XAxis dataKey="day" tick={{ fontSize: 12, fill: "#6B7280" }} />
               <YAxis
-                className="text-xs text-gray-500"
-                tick={{ fill: "#6B7280" }}
+                tick={{ fontSize: 12, fill: "#6B7280" }}
                 domain={[0, 9]}
                 tickFormatter={(value) => `${value}h`}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
+                  background: "rgba(255,255,255,0.9)",
+                  border: "1px solid rgba(0,0,0,0.1)",
                   borderRadius: "8px",
-                  padding: "12px",
+                  backdropFilter: "blur(4px)",
                 }}
                 formatter={(value) => [`${value} hours`, "Hours Worked"]}
                 labelFormatter={(label) => `Day ${label}`}

@@ -47,7 +47,7 @@ export function HistoryFilters({
   };
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
       <CardContent className="p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -56,7 +56,7 @@ export function HistoryFilters({
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                className="bg-white/60 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 rounded-lg"
                 placeholder="Start Date"
               />
             </div>
@@ -65,16 +65,16 @@ export function HistoryFilters({
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                className="bg-white/60 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 rounded-lg"
                 placeholder="End Date"
               />
             </div>
             <div>
               <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="border-gray-200 focus:border-blue-500 focus:ring-blue-500">
+                <SelectTrigger className="bg-white/60 backdrop-blur-sm border-gray-200/60 focus:border-blue-400 rounded-lg">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white/90 backdrop-blur-md border-gray-200/60 rounded-xl">
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="CHECKED_IN">Checked In</SelectItem>
                   <SelectItem value="CHECKED_OUT">Checked Out</SelectItem>
@@ -87,7 +87,7 @@ export function HistoryFilters({
           <div className="flex gap-2">
             <Button
               onClick={handleApply}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all duration-200 hover:shadow-emerald-500/20"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white transition-colors"
             >
               <Search className="h-4 w-4 mr-2" />
               Apply
@@ -95,7 +95,7 @@ export function HistoryFilters({
             <Button
               variant="outline"
               onClick={handleReset}
-              className="border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-all duration-200"
+              className="bg-white/60 backdrop-blur-sm border-gray-200/60 text-gray-600 hover:bg-white/80 transition-colors"
             >
               <RotateCcw className="h-4 w-4 mr-2" />
               Reset

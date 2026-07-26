@@ -34,7 +34,7 @@ export function HistoryList({
 }: HistoryListProps) {
   if (isLoading) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
         <CardContent className="p-6">
           <div className="flex items-center justify-center min-h-50">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -47,20 +47,34 @@ export function HistoryList({
   const getStatusBadge = (status: string, isLate: boolean) => {
     if (status === "CHECKED_OUT") {
       return (
-        <Badge className="bg-emerald-100 text-emerald-700">Completed</Badge>
+        <Badge className="bg-emerald-100/80 text-emerald-700 backdrop-blur-sm">
+          Completed
+        </Badge>
       );
     }
     if (isLate) {
-      return <Badge className="bg-red-100 text-red-700">Late</Badge>;
+      return (
+        <Badge className="bg-red-100/80 text-red-700 backdrop-blur-sm">
+          Late
+        </Badge>
+      );
     }
     if (status === "CHECKED_IN") {
-      return <Badge className="bg-blue-100 text-blue-700">Checked In</Badge>;
+      return (
+        <Badge className="bg-blue-100/80 text-blue-700 backdrop-blur-sm">
+          Checked In
+        </Badge>
+      );
     }
-    return <Badge className="bg-gray-100 text-gray-700">Absent</Badge>;
+    return (
+      <Badge className="bg-gray-100/80 text-gray-700 backdrop-blur-sm">
+        Absent
+      </Badge>
+    );
   };
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl overflow-hidden">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold text-gray-900">
           Check-in History
@@ -73,7 +87,7 @@ export function HistoryList({
           </div>
         ) : (
           <>
-            <div className="rounded-lg border overflow-x-auto">
+            <div className="rounded-lg border border-gray-200/60 overflow-x-auto bg-white/40 backdrop-blur-sm">
               <Table>
                 <TableHeader className="bg-gray-50/50">
                   <TableRow>
@@ -98,7 +112,7 @@ export function HistoryList({
                   {data.map((record) => (
                     <TableRow
                       key={record.id}
-                      className="hover:bg-gray-50/50 transition-colors"
+                      className="hover:bg-white/60 transition-colors"
                     >
                       <TableCell className="font-medium">
                         {new Date(record.date).toLocaleDateString("en-US", {
@@ -143,7 +157,6 @@ export function HistoryList({
               </Table>
             </div>
 
-            {/* Pagination */}
             {pagination.total_pages > 1 && (
               <div className="flex items-center justify-between mt-4">
                 <p className="text-sm text-gray-500">
@@ -160,6 +173,7 @@ export function HistoryList({
                     size="sm"
                     onClick={() => onPageChange(pagination.page - 1)}
                     disabled={pagination.page <= 1}
+                    className="bg-white/60 backdrop-blur-sm border-gray-200/60"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
@@ -171,6 +185,7 @@ export function HistoryList({
                     size="sm"
                     onClick={() => onPageChange(pagination.page + 1)}
                     disabled={pagination.page >= pagination.total_pages}
+                    className="bg-white/60 backdrop-blur-sm border-gray-200/60"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </Button>

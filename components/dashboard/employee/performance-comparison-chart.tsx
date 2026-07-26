@@ -36,7 +36,7 @@ export function PerformanceComparisonChart({
 }: PerformanceComparisonChartProps) {
   if (isLoading) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
         <CardContent className="p-6">
           <div className="animate-pulse h-62.5 bg-gray-200 rounded-lg" />
         </CardContent>
@@ -46,7 +46,7 @@ export function PerformanceComparisonChart({
 
   if (!data || data.length === 0) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-gray-900">
             You vs Department Average
@@ -66,7 +66,7 @@ export function PerformanceComparisonChart({
   const isAboveAvg = latest && latest.you > latest.department;
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
       <CardHeader>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -79,11 +79,11 @@ export function PerformanceComparisonChart({
             <Badge
               className={
                 isAboveAvg
-                  ? "bg-emerald-100 text-emerald-700"
-                  : "bg-yellow-100 text-yellow-700"
+                  ? "bg-emerald-100/80 text-emerald-700 backdrop-blur-sm"
+                  : "bg-amber-100/80 text-amber-700 backdrop-blur-sm"
               }
             >
-              {isAboveAvg ? "✅ Above Average" : "📈 Below Average"}
+              {isAboveAvg ? "Above Average" : "Below Average"}
             </Badge>
           )}
         </div>
@@ -95,27 +95,19 @@ export function PerformanceComparisonChart({
               data={data}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                className="stroke-gray-200"
-              />
-              <XAxis
-                dataKey="month"
-                className="text-xs text-gray-500"
-                tick={{ fill: "#6B7280" }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
+              <XAxis dataKey="month" tick={{ fontSize: 12, fill: "#6B7280" }} />
               <YAxis
-                className="text-xs text-gray-500"
-                tick={{ fill: "#6B7280" }}
+                tick={{ fontSize: 12, fill: "#6B7280" }}
                 domain={[0, 100]}
                 tickFormatter={(value) => `${value}%`}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
+                  background: "rgba(255,255,255,0.9)",
+                  border: "1px solid rgba(0,0,0,0.1)",
                   borderRadius: "8px",
-                  padding: "12px",
+                  backdropFilter: "blur(4px)",
                 }}
                 formatter={(value) => [`${value}%`, ""]}
               />

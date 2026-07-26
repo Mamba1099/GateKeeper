@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState } from "react";
 import {
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Area,
-  ComposedChart,
+  ReferenceLine,
 } from "recharts";
 import {
   Card,
@@ -18,34 +19,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface DataPoint {
-  date: string;
-  day: number;
-  dayName: string;
-  status: string;
-  hours: number;
-  isLate: boolean;
-  hasRecord: boolean;
+interface MonthlyDataPoint {
+  month: string;
+  attendance: number;
+  punctuality: number;
 }
 
 interface AttendanceTrendChartProps {
-  data: DataPoint[];
+  data: MonthlyDataPoint[];
+  departmentAvg?: number;
   isLoading?: boolean;
 }
 
 export function AttendanceTrendChart({
   data,
+  departmentAvg,
   isLoading,
 }: AttendanceTrendChartProps) {
-  const [period, setPeriod] = useState<"week" | "month">("month");
-
   if (isLoading) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
         <CardContent className="p-6">
-          <div className="animate-pulse h-75 bg-gray-200 rounded-lg" />
+          <div className="animate-pulse h-72 bg-gray-200 rounded-lg" />
         </CardContent>
       </Card>
     );
@@ -53,124 +49,144 @@ export function AttendanceTrendChart({
 
   if (!data || data.length === 0) {
     return (
-      <Card className="border-0 shadow-sm">
+      <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-gray-900">
-            Monthly Attendance
+            Monthly Attendance Trend
           </CardTitle>
           <CardDescription>No attendance data available</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-75 flex items-center justify-center text-gray-500">
-            No data for this month
+          <div className="h-72 flex items-center justify-center text-gray-500">
+            No data for this period
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  // Prepare data for chart
-  const chartData = data.map((d) => ({
-    day: `${d.dayName} ${d.day}`,
-    hours: d.hours,
-    status: d.status,
-    isLate: d.isLate,
-    hasRecord: d.hasRecord,
-    isPresent:
-      d.status === "PRESENT" || d.status === "CHECKED_IN" ? d.hours : 0,
-    isAbsent: d.status === "ABSENT" ? 1 : 0,
-  }));
-
-  const presentDays = data.filter(
-    (d) => d.status === "PRESENT" || d.status === "CHECKED_IN",
-  ).length;
-  const totalDays = data.length;
-  const attendanceRate =
-    totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
+  const latestMonth = data[data.length - 1];
+  const overallAttendance =
+    data.length > 0
+      ? Math.round(data.reduce((sum, d) => sum + d.attendance, 0) / data.length)
+      : 0;
 
   return (
-    <Card className="border-0 shadow-sm">
+    <Card className="bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl">
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <CardTitle className="text-lg font-semibold text-gray-900">
-            Monthly Attendance
+            Monthly Attendance Trend
           </CardTitle>
           <CardDescription>
-            {presentDays} of {totalDays} days present ({attendanceRate}%)
+            {data.length} months • Avg: {overallAttendance}%
+            {departmentAvg !== undefined && departmentAvg !== null && (
+              <span className="ml-2 text-blue-600">
+                | Dept Avg: {departmentAvg}%
+              </span>
+            )}
           </CardDescription>
         </div>
-        <Tabs
-          value={period}
-          onValueChange={(v) => setPeriod(v as "week" | "month")}
-          className="w-45"
-        >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="week">Week</TabsTrigger>
-            <TabsTrigger value="month">Month</TabsTrigger>
-          </TabsList>
-        </Tabs>
       </CardHeader>
       <CardContent>
-        <div className="h-75 w-full">
+        <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart
-              data={chartData}
+            <AreaChart
+              data={data}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                className="stroke-gray-200"
-              />
-              <XAxis
-                dataKey="day"
-                className="text-xs text-gray-500"
-                tick={{ fill: "#6B7280" }}
-                interval={1}
-              />
+              <defs>
+                <linearGradient
+                  id="colorAttendance"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient
+                  id="colorPunctuality"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
+              <XAxis dataKey="month" tick={{ fontSize: 12, fill: "#6B7280" }} />
               <YAxis
-                className="text-xs text-gray-500"
-                tick={{ fill: "#6B7280" }}
-                domain={[0, 9]}
-                tickFormatter={(value) => `${value}h`}
+                tick={{ fontSize: 12, fill: "#6B7280" }}
+                domain={[0, 100]}
+                tickFormatter={(value) => `${value}%`}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
+                  background: "rgba(255,255,255,0.9)",
+                  border: "1px solid rgba(0,0,0,0.1)",
                   borderRadius: "8px",
-                  padding: "12px",
+                  backdropFilter: "blur(4px)",
                 }}
-                formatter={(value, name) => {
-                  if (name === "Hours Worked") return [`${value}h`, name];
-                  return [`${value}`, name];
-                }}
+                formatter={(value, name) => [
+                  `${value}%`,
+                  name === "attendance" ? "Attendance" : "Punctuality",
+                ]}
               />
               <Legend />
+              {departmentAvg !== undefined && departmentAvg !== null && (
+                <ReferenceLine
+                  y={departmentAvg}
+                  stroke="#3B82F6"
+                  strokeDasharray="5 5"
+                  strokeWidth={1.5}
+                  label={{
+                    value: `Dept Avg: ${departmentAvg}%`,
+                    position: "insideTopRight",
+                    fill: "#3B82F6",
+                    fontSize: 11,
+                  }}
+                />
+              )}
               <Area
                 type="monotone"
-                dataKey="isPresent"
-                stroke="#10B981"
-                fill="#10B981"
-                fillOpacity={0.2}
-                name="Hours Worked"
+                dataKey="attendance"
+                stroke="#3b82f6"
+                fillOpacity={1}
+                fill="url(#colorAttendance)"
                 strokeWidth={2}
+                name="Attendance %"
               />
-            </ComposedChart>
+              <Area
+                type="monotone"
+                dataKey="punctuality"
+                stroke="#10b981"
+                fillOpacity={1}
+                fill="url(#colorPunctuality)"
+                strokeWidth={2}
+                name="Punctuality %"
+              />
+            </AreaChart>
           </ResponsiveContainer>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-4 mt-4 text-sm">
           <div className="flex items-center gap-1.5">
+            <div className="h-3 w-3 rounded-full bg-blue-500" />
+            <span className="text-gray-600">Attendance Rate</span>
+          </div>
+          <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded-full bg-emerald-500" />
-            <span className="text-gray-600">✅ Present</span>
+            <span className="text-gray-600">Punctuality Rate</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded-full bg-red-400" />
-            <span className="text-gray-600">❌ Absent</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded-full bg-yellow-400" />
-            <span className="text-gray-600">⚠️ Late</span>
-          </div>
+          {departmentAvg !== undefined && departmentAvg !== null && (
+            <div className="flex items-center gap-1.5">
+              <div className="h-0.5 w-6 bg-blue-500 border-t border-dashed" />
+              <span className="text-gray-600">Department Average</span>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
