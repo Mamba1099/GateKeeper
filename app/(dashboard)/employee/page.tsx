@@ -60,6 +60,14 @@ export default function EmployeeDashboard() {
     hoursLoading ||
     comparisonLoading;
 
+
+  const stats = statsData?.data || statsData;
+  const status = statusData?.data || statusData;
+  const trend = trendData?.data || trendData;
+  const arrival = arrivalData?.data || arrivalData;
+  const hours = hoursData?.data || hoursData;
+  const comparison = comparisonData?.data || comparisonData;
+
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
@@ -71,29 +79,26 @@ export default function EmployeeDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <StatsCards stats={statsData?.data} isLoading={isLoading} />
+      <StatsCards stats={stats} isLoading={isLoading} />
 
       {/* Today's Status */}
-      <TodayStatusCard status={statusData?.data} isLoading={isLoading} />
+      <TodayStatusCard status={status} isLoading={isLoading} />
 
       {/* Main Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AttendanceTrendChart
-          data={trendData?.data?.attendance || []}
-          departmentAvg={trendData?.data?.department_avg}
+          data={trend?.attendance || []}
+          departmentAvg={trend?.department_avg}
           isLoading={isLoading}
         />
-        <ArrivalDepartureChart
-          data={arrivalData?.data || []}
-          isLoading={isLoading}
-        />
+        <ArrivalDepartureChart data={arrival || []} isLoading={isLoading} />
       </div>
 
       {/* Secondary Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <HoursWorkedChart data={hoursData?.data || []} isLoading={isLoading} />
+        <HoursWorkedChart data={hours || []} isLoading={isLoading} />
         <PerformanceComparisonChart
-          data={comparisonData?.data || []}
+          data={comparison || []}
           isLoading={isLoading}
         />
       </div>
