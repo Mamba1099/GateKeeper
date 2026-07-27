@@ -16,6 +16,7 @@ export default async function RootLayout({
       <body>
         <TooltipProvider>
           <Providers session={session}>
+            {children}
             <Toaster position="top-right" richColors />
           </Providers>
         </TooltipProvider>
