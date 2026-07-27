@@ -19,7 +19,6 @@ export async function GET(request: NextRequest) {
     const sixMonthsAgo = new Date(now);
     sixMonthsAgo.setMonth(now.getMonth() - 6);
 
-    // Get user's monthly summaries for the last 6 months
     const summaries = await prisma.attendanceSummary.findMany({
       where: {
         user_id: userId,
@@ -28,7 +27,6 @@ export async function GET(request: NextRequest) {
       orderBy: [{ year: "asc" }, { month: "asc" }],
     });
 
-    // Filter out months before the cutoff manually (needed for year boundary)
     const filtered = summaries.filter((s) => {
       if (s.year > sixMonthsAgo.getFullYear()) return true;
       if (
@@ -39,7 +37,6 @@ export async function GET(request: NextRequest) {
       return false;
     });
 
-    // Get department average
     const department = await prisma.user.findUnique({
       where: { id: userId },
       select: { department_id: true },
