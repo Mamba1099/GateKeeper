@@ -48,3 +48,53 @@ export interface ComparisonPoint {
   you: number;
   department: number;
 }
+export interface DashboardData {
+  employees: {
+    total: number;
+    active: number;
+    inactive: number;
+  };
+  departments: {
+    total: number;
+    active: number;
+  };
+  today: {
+    checkedIn: number;
+    onTime: number;
+    late: number;
+    attendanceRate: number;
+    avgArrivalTime: string;
+  };
+  monthly: {
+    avgAttendanceRate: number;
+    avgPunctuality: number;
+  };
+  performance: {
+    topPerformersCount: number;
+    bestStreak: number;
+  };
+  recentLate: {
+    employeeName: string;
+    lateMinutes: number;
+    checkInTime: string;
+  }[];
+  recentEarlyDepartures: {
+    employeeName: string;
+    earlyMinutes: number;
+    checkInTime: string;
+  }[];
+  dailyTrend: {
+    date: string;
+    checkIns: number;
+    late: number;
+  }[];
+  monthlyRates: {
+    month: string;
+    attendanceRate: number;
+    punctualityRate: number;
+  }[];
+  hoursDistribution: {
+    range: string;
+    count: number;
+  }[];
+}
