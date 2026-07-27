@@ -1,17 +1,17 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/auth-options";
 import { prisma } from "@/lib/prisma";
-import {
-  createSecureResponse,
-  createSecureErrorResponse,
-} from "@/lib/security/request-validator";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user || session.user.role !== "EMPLOYEE") {
-      return createSecureErrorResponse("Unauthorized", 401, request);
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
     }
 
     const userId = session.user.id;
@@ -19,42 +19,54 @@ export async function GET(request: NextRequest) {
     const sixMonthsAgo = new Date(now);
     sixMonthsAgo.setMonth(now.getMonth() - 6);
 
-    // Get user's monthly summaries
+    // Get user's monthly summaries for the last 6 months
     const summaries = await prisma.attendanceSummary.findMany({
       where: {
         user_id: userId,
         year: { gte: sixMonthsAgo.getFullYear() },
-        OR: [
-          { month: { gte: sixMonthsAgo.getMonth() + 1 } },
-          { year: { gt: sixMonthsAgo.getFullYear() } },
-        ],
       },
       orderBy: [{ year: "asc" }, { month: "asc" }],
     });
 
-    // Get department average for same period
+    // Filter out months before the cutoff manually (needed for year boundary)
+    const filtered = summaries.filter((s) => {
+      if (s.year > sixMonthsAgo.getFullYear()) return true;
+      if (
+        s.year === sixMonthsAgo.getFullYear() &&
+        s.month >= sixMonthsAgo.getMonth() + 1
+      )
+        return true;
+      return false;
+    });
+
+    // Get department average
     const department = await prisma.user.findUnique({
       where: { id: userId },
       select: { department_id: true },
     });
 
-    let departmentAvg = undefined;
+    let departmentAvg = 0;
     if (department) {
-      const deptSummaries = await prisma.attendanceSummary.groupBy({
-        by: ["month", "year"],
+      const deptUsers = await prisma.user.findMany({
+        where: { department_id: department.department_id },
+        select: { id: true },
+      });
+      const deptUserIds = deptUsers.map((u) => u.id);
+
+      const deptSummaries = await prisma.attendanceSummary.findMany({
         where: {
-          user: { department_id: department.department_id },
-        },
-        _avg: {
-          attendance_percentage: true,
+          user_id: { in: deptUserIds },
+          year: now.getFullYear(),
+          month: now.getMonth() + 1,
         },
       });
-      // Calculate average attendance per month
-      departmentAvg =
-        deptSummaries.reduce(
-          (acc, s) => acc + (s._avg.attendance_percentage || 0),
-          0,
-        ) / (deptSummaries.length || 1);
+
+      if (deptSummaries.length > 0) {
+        departmentAvg = Math.round(
+          deptSummaries.reduce((acc, s) => acc + s.attendance_percentage, 0) /
+            deptSummaries.length,
+        );
+      }
     }
 
     const monthNames = [
@@ -72,29 +84,24 @@ export async function GET(request: NextRequest) {
       "Dec",
     ];
 
-    const attendanceData = summaries.map((s) => ({
+    const attendanceData = filtered.map((s) => ({
       month: `${monthNames[s.month - 1]} ${s.year}`,
-      attendance: Math.round(s.attendance_percentage || 0),
-      punctuality: Math.round(s.punctuality_percentage || 0),
+      attendance: Math.round(s.attendance_percentage),
+      punctuality: Math.round(s.punctuality_percentage),
     }));
 
-    return createSecureResponse(
-      {
-        success: true,
-        data: {
-          attendance: attendanceData,
-          department_avg: departmentAvg ? Math.round(departmentAvg) : undefined,
-        },
+    return NextResponse.json({
+      success: true,
+      data: {
+        attendance: attendanceData,
+        department_avg: departmentAvg > 0 ? departmentAvg : null,
       },
-      { status: 200 },
-      request,
-    );
+    });
   } catch (error) {
     console.error("Error fetching attendance trend:", error);
-    return createSecureErrorResponse(
-      "Failed to fetch attendance trend",
-      500,
-      request,
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch attendance trend" },
+      { status: 500 },
     );
   }
 }
