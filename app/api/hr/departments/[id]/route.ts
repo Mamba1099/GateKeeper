@@ -9,7 +9,7 @@ import {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -20,8 +20,10 @@ export async function GET(
       return createSecureErrorResponse("Unauthorized", 401, request);
     }
 
+    const { id } = await params;
+
     const department = await prisma.department.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         _count: {
           select: { users: true },
@@ -62,7 +64,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -73,11 +75,12 @@ export async function PUT(
       return createSecureErrorResponse("Unauthorized", 401, request);
     }
 
+    const { id } = await params;
     const body = await request.json();
     const { name, code, description, is_active } = body;
 
     const department = await prisma.department.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name: name || undefined,
         code: code || undefined,
@@ -107,7 +110,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -118,9 +121,10 @@ export async function DELETE(
       return createSecureErrorResponse("Unauthorized", 401, request);
     }
 
-    // Soft delete - just deactivate
+    const { id } = await params;
+
     const department = await prisma.department.update({
-      where: { id: params.id },
+      where: { id },
       data: { is_active: false },
     });
 
