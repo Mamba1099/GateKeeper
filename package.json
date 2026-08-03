@@ -64,5 +64,6 @@
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
+  "packageManager": "pnpm@8.15.0",
   "type": "module"
 }
