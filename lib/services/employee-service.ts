@@ -3,6 +3,7 @@ import {
   CreateEmployeeData,
   UpdateEmployeeData,
 } from "@/lib/api/employee-api";
+import { UpdateProfileData, ChangePasswordData } from "@/types/employee";
 
 export class EmployeeService {
   static async getEmployees(params?: {
