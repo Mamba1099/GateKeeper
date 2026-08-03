@@ -16,17 +16,12 @@ function getEnvVar(key: string): string {
   return value;
 }
 
-const ADMIN_EMAIL = getEnvVar("ADMIN_EMAIL");
-const ADMIN_PASSWORD = getEnvVar("ADMIN_PASSWORD");
-const ADMIN_FULL_NAME = getEnvVar("ADMIN_FULL_NAME");
-
 const HR_EMAIL = getEnvVar("HR_EMAIL");
 const HR_PASSWORD = getEnvVar("HR_PASSWORD");
 const HR_FULL_NAME = getEnvVar("HR_FULL_NAME");
 
 async function main() {
   console.log("🌱 Seeding database...");
-  console.log(`📧 ADMIN: ${ADMIN_EMAIL}`);
   console.log(`📧 HR: ${HR_EMAIL}`);
 
   const departments = [
@@ -156,38 +151,6 @@ async function main() {
 
   console.log(`✅ ${allDepartments.length} check-in settings created`);
 
-  console.log("👤 Creating admin user...");
-
-  const adminPasswordHash = await bcrypt.hash(ADMIN_PASSWORD, 10);
-  const adminDept = await prisma.department.findUnique({
-    where: { code: "HRAD" },
-  });
-
-  if (!adminDept) throw new Error("HRAD department not found");
-
-  await prisma.user.upsert({
-    where: { email: ADMIN_EMAIL },
-    update: {
-      password_hash: adminPasswordHash,
-      full_name: ADMIN_FULL_NAME,
-      role: "ADMIN",
-      department_id: adminDept.id,
-      position: "System Administrator",
-      is_active: true,
-    },
-    create: {
-      email: ADMIN_EMAIL,
-      password_hash: adminPasswordHash,
-      full_name: ADMIN_FULL_NAME,
-      role: "ADMIN",
-      department_id: adminDept.id,
-      position: "System Administrator",
-      is_active: true,
-    },
-  });
-
-  console.log(`✅ Admin user created: ${ADMIN_EMAIL}`);
-
   console.log("👤 Creating HR user...");
 
   const hrPasswordHash = await bcrypt.hash(HR_PASSWORD, 10);
@@ -225,8 +188,7 @@ async function main() {
   });
 
   console.log("\n✅✅✅ SEEDING COMPLETE!\n");
-  console.log("SYSTEM USERS:");
-  console.log(`  ADMIN: ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
+  console.log("SYSTEM USER:");
   console.log(`  HR: ${HR_EMAIL} / ${HR_PASSWORD}\n`);
   console.log("DEPARTMENTS:");
   deptList.forEach((dept, i) => {
