@@ -2,6 +2,7 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 
 const baseUrl = process.env.NEXTAUTH_URL || "";
+console.log(baseUrl);
 
 export const apiClient = axios.create({
   baseURL: baseUrl,
@@ -11,7 +12,6 @@ export const apiClient = axios.create({
   timeout: 30000,
 });
 
-// Request interceptor to add auth token from NextAuth session
 apiClient.interceptors.request.use(
   async (config) => {
     try {
