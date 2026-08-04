@@ -51,6 +51,7 @@ model User {
   @@index([department_id])
   @@index([role])
   @@map("users")
+  passwordResetTokens PasswordResetToken[]
 }
 
 model Department {
@@ -193,4 +194,18 @@ model LoginAttempt {
 
   @@index([email])
   @@map("login_attempts")
+}
+
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  token      String   @unique
+  expires_at DateTime
+  used       Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  @@index([token])
+  @@index([user_id])
+  @@index([expires_at])
 }
