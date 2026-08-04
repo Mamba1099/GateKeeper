@@ -16,11 +16,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Building2, Mail, Lock, Loader2 } from "lucide-react";
+import { Building2, Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
 
 export function LoginForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -72,6 +73,10 @@ export function LoginForm() {
   const getFieldErrors = (field: any) => {
     if (!field?.state?.meta?.errors) return [];
     return field.state.meta.errors;
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -165,7 +170,7 @@ export function LoginForm() {
                       Password
                     </Label>
                     <a
-                      href="#"
+                      href="/forgot-password"
                       className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
                     >
                       Forgot password?
@@ -175,18 +180,30 @@ export function LoginForm() {
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
                       id={field.name}
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       disabled={isLoading}
-                      className={`pl-10 h-10 ${
+                      className={`pl-10 pr-10 h-10 ${
                         hasError
                           ? "border-red-500 focus-visible:ring-red-500"
                           : "border-gray-200 focus-visible:ring-blue-500"
                       }`}
                     />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
                   </div>
                   {hasError && (
                     <p className="text-sm text-red-500">
