@@ -14,10 +14,7 @@ export async function POST(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (
-      !session?.user ||
-      (session.user.role !== "HR" && session.user.role !== "ADMIN")
-    ) {
+    if (!session?.user || session.user.role !== "HR") {
       return createSecureErrorResponse("Unauthorized", 401, request);
     }
 

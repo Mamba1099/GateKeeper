@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth/auth-options";
 export interface AuthUser {
   id: string;
   email: string;
-  role: "EMPLOYEE" | "HR" | "ADMIN";
+  role: "EMPLOYEE" | "HR";
   department_id: string;
   departmentName: string;
   position?: string | null;
@@ -39,7 +39,7 @@ export function requireAuth(handler: ApiHandler) {
     const user: AuthUser = {
       id: session.user.id,
       email: session.user.email,
-      role: session.user.role as "EMPLOYEE" | "HR" | "ADMIN",
+      role: session.user.role as "EMPLOYEE" | "HR",
       department_id: session.user.departmentId,
       departmentName: session.user.departmentName,
       position: session.user.position,
@@ -49,7 +49,7 @@ export function requireAuth(handler: ApiHandler) {
   };
 }
 
-export function requireRole(roles: ("EMPLOYEE" | "HR" | "ADMIN")[]) {
+export function requireRole(roles: ("EMPLOYEE" | "HR")[]) {
   return (handler: ApiHandler) => {
     return async (request: NextRequest) => {
       const session = await getServerSession(authOptions);
@@ -61,7 +61,7 @@ export function requireRole(roles: ("EMPLOYEE" | "HR" | "ADMIN")[]) {
         );
       }
 
-      if (!roles.includes(session.user.role as "EMPLOYEE" | "HR" | "ADMIN")) {
+      if (!roles.includes(session.user.role as "EMPLOYEE" | "HR")) {
         return NextResponse.json(
           {
             success: false,
@@ -75,7 +75,7 @@ export function requireRole(roles: ("EMPLOYEE" | "HR" | "ADMIN")[]) {
       const user: AuthUser = {
         id: session.user.id,
         email: session.user.email,
-        role: session.user.role as "EMPLOYEE" | "HR" | "ADMIN",
+        role: session.user.role as "EMPLOYEE" | "HR",
         department_id: session.user.departmentId,
         departmentName: session.user.departmentName,
         position: session.user.position,

@@ -11,41 +11,52 @@ export default withAuth(
       if (!token) {
         return NextResponse.next();
       }
-      if (token.role === "HR" || token.role === "ADMIN") {
+      if (token.role === "HR") {
         return NextResponse.redirect(new URL("/hr", req.url));
       }
-      return NextResponse.redirect(new URL("/employee", req.url));
-    }
-
-    if (
-      path.startsWith("/hr") &&
-      (!token || (token.role !== "HR" && token.role !== "ADMIN"))
-    ) {
+      if (token.role === "EMPLOYEE") {
+        return NextResponse.redirect(new URL("/employee", req.url));
+      }
       return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    if (path.startsWith("/employee") && (!token || token.role !== "EMPLOYEE")) {
-      return NextResponse.redirect(new URL("/login", req.url));
+    if (path.startsWith("/hr")) {
+      if (!token || token.role !== "HR") {
+        return NextResponse.redirect(new URL("/login", req.url));
+      }
     }
 
-    if (
-      path.startsWith("/api/hr") &&
-      (!token || (token.role !== "HR" && token.role !== "ADMIN"))
-    ) {
-      return NextResponse.json(
-        { success: false, error: "Forbidden. HR access required." },
-        { status: 403 },
-      );
+    if (path.startsWith("/employee")) {
+      if (!token || token.role !== "EMPLOYEE") {
+        return NextResponse.redirect(new URL("/login", req.url));
+      }
     }
 
-    if (
-      path.startsWith("/api/employee") &&
-      (!token || token.role !== "EMPLOYEE")
-    ) {
-      return NextResponse.json(
-        { success: false, error: "Forbidden. Employee access required." },
-        { status: 403 },
-      );
+    if (path.startsWith("/api/hr")) {
+      if (!token || token.role !== "HR") {
+        return NextResponse.json(
+          { success: false, error: "Forbidden. HR access required." },
+          { status: 403 },
+        );
+      }
+    }
+
+    if (path.startsWith("/api/employee")) {
+      if (!token || token.role !== "EMPLOYEE") {
+        return NextResponse.json(
+          { success: false, error: "Forbidden. Employee access required." },
+          { status: 403 },
+        );
+      }
+    }
+
+    if (path.startsWith("/api/check-in")) {
+      if (!token || (token.role !== "HR" && token.role !== "EMPLOYEE")) {
+        return NextResponse.json(
+          { success: false, error: "Forbidden. Authentication required." },
+          { status: 403 },
+        );
+      }
     }
 
     const response = NextResponse.next();

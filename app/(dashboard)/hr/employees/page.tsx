@@ -121,7 +121,7 @@ export default function HRManageEmployees() {
     );
   }
 
-  if (!user || (user.role !== "HR" && user.role !== "ADMIN")) {
+  if (!user || (user.role !== "HR")) {
     return null;
   }
 

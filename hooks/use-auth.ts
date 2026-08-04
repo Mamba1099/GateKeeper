@@ -17,9 +17,8 @@ export function useAuth() {
     user: session?.user,
     isAuthenticated: status === "authenticated",
     isLoading: status === "loading",
-    isHR: session?.user?.role === "HR" || session?.user?.role === "ADMIN",
+    isHR: session?.user?.role === "HR",
     isEmployee: session?.user?.role === "EMPLOYEE",
-    isAdmin: session?.user?.role === "ADMIN",
     logout,
     session,
   };

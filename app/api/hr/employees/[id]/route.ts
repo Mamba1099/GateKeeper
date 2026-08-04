@@ -13,10 +13,7 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (
-      !session?.user ||
-      (session.user.role !== "HR" && session.user.role !== "ADMIN")
-    ) {
+    if (!session?.user || session.user.role !== "HR") {
       return createSecureErrorResponse("Unauthorized", 401, request);
     }
 
@@ -66,10 +63,7 @@ export async function PUT(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (
-      !session?.user ||
-      (session.user.role !== "HR" && session.user.role !== "ADMIN")
-    ) {
+    if (!session?.user || session.user.role !== "HR") {
       return createSecureErrorResponse("Unauthorized", 401, request);
     }
 
@@ -121,10 +115,7 @@ export async function DELETE(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (
-      !session?.user ||
-      (session.user.role !== "HR" && session.user.role !== "ADMIN")
-    ) {
+    if (!session?.user || session.user.role !== "HR") {
       return createSecureErrorResponse("Unauthorized", 401, request);
     }
 
@@ -141,7 +132,6 @@ export async function DELETE(
     if (!existing) {
       return createSecureErrorResponse("Employee not found", 404, request);
     }
-
 
     await prisma.user.delete({
       where: { id },
@@ -164,4 +154,3 @@ export async function DELETE(
     return createSecureErrorResponse("Failed to delete employee", 500, request);
   }
 }
-

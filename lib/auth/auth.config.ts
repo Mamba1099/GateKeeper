@@ -24,7 +24,7 @@ export async function hasRole(roles: string | string[]) {
 }
 
 export async function isAdmin() {
-  return hasRole(["ADMIN", "HR"]);
+  return hasRole(["HR"]);
 }
 
 export async function isEmployee() {

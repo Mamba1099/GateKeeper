@@ -40,7 +40,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   if (!user) return null;
 
-  const isHR = user.role === "HR" || user.role === "ADMIN";
+  const isHR = user.role === "HR";
 
   const navItems: NavItem[] = [
     {
@@ -65,19 +65,19 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       title: "Dashboard",
       href: "/hr",
       icon: <LayoutDashboard className="h-5 w-5" />,
-      roles: ["HR", "ADMIN"],
+      roles: ["HR"],
     },
     {
       title: "Employees",
       href: "/hr/employees",
       icon: <Users className="h-5 w-5" />,
-      roles: ["HR", "ADMIN"],
+      roles: ["HR"],
     },
     {
       title: "Departments",
       href: "/hr/departments",
       icon: <Building2 className="h-5 w-5" />,
-      roles: ["HR", "ADMIN"],
+      roles: ["HR"],
     },
   ];
 
